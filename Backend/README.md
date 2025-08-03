@@ -108,3 +108,78 @@ Authenticates a user. Expects email and password in the request body and returns
 - On validation error, a 400 status code is returned with error details.
 - On authentication failure, a 401 status code is returned.
 - On success, the response includes the user's id, fullname, email,
+
+
+## Get User Profile
+
+### Endpoint
+
+```
+GET /users/profile
+```
+
+### Description
+
+Retrieves the authenticated user's profile information. Requires a valid JWT token in the request (via cookie or Authorization header).
+
+### Authentication
+
+- Requires JWT token (sent as a cookie named `token` or in the `Authorization: Bearer <token>` header).
+
+### Responses
+
+| Status Code | Description                                 |
+|-------------|---------------------------------------------|
+| 200         | User profile retrieved successfully. Returns user info. |
+| 401         | Unauthorized. No token provided or token invalid.       |
+| 500         | Internal server error.                      |
+
+### Example Response
+
+```json
+{
+  "message": "User profile retrieved successfully",
+  "user": {
+    "id": "user_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+}
+```
+
+---
+
+## Logout User
+
+### Endpoint
+
+```
+GET /users/logout
+```
+
+### Description
+
+Logs out the authenticated user by blacklisting the JWT token and clearing the authentication cookie.
+
+### Authentication
+
+- Requires JWT token (sent as a cookie named `token` or in the `Authorization: Bearer <token>` header).
+
+### Responses
+
+| Status Code | Description                                 |
+|-------------|---------------------------------------------|
+| 200         | User logged out successfully.               |
+| 401         | Unauthorized. No token provided.            |
+| 500         | Internal server error.                      |
+
+### Example Response
+
+```json
+{
+  "message": "User logged out successfully"
+}
+```
