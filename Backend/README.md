@@ -183,3 +183,117 @@ Logs out the authenticated user by blacklisting the JWT token and clearing the a
   "message": "User logged out successfully"
 }
 ```
+
+## Register Captain
+
+### Endpoint
+
+```
+POST /captains/register
+```
+
+### Description
+
+Registers a new captain. Expects captain details and vehicle information in the request body. Returns a success message with captain info and a JWT token.
+
+### Request Body
+
+```json
+{
+  "fullname": {
+    "firstname": "string, required, min 3 chars",
+    "lastname": "string, optional, min 3 chars"
+  },
+  "email": "string, required, valid email",
+  "password": "string, required, min 6 chars",
+  "vehicle": {
+    "vehiclecolor": "string, required, min 3 chars",
+    "vehicleplate": "string, required, unique, min 3 chars",
+    "vehiclecapacity": "number, required, min 1",
+    "vehicletype": "string, required, one of ['car', 'bike', 'auto']"
+  }
+}
+```
+
+#### Example
+
+```json
+{
+  "fullname": {
+    "firstname": "Alice",
+    "lastname": "Smith"
+  },
+  "email": "alice.smith@example.com",
+  "password": "strongPassword123",
+  "vehicle": {
+    "vehiclecolor": "Red",
+    "vehicleplate": "ABC123",
+    "vehiclecapacity": 4,
+    "vehicletype": "car"
+  }
+}
+```
+
+### Validation Rules
+
+- `fullname.firstname`: Required, minimum 3 characters.
+- `fullname.lastname`: Optional, minimum 3 characters if provided.
+- `email`: Required, must be a valid email address, unique.
+- `password`: Required, minimum 6 characters.
+- `vehicle.vehiclecolor`: Required, minimum 3 characters.
+- `vehicle.vehicleplate`: Required, unique, minimum 3 characters.
+- `vehicle.vehiclecapacity`: Required, minimum 1.
+- `vehicle.vehicletype`: Required, must be one of `car`, `bike`, or `auto`.
+
+### Responses
+
+| Status Code | Description                                 |
+|-------------|---------------------------------------------|
+| 201         | Captain registered successfully. Returns captain info and JWT token. |
+| 400         | Validation error (missing/invalid fields).  |
+| 409         | Email or vehicle plate already exists.      |
+| 500         | Internal server error.                      |
+
+---
+
+## Login Captain
+
+### Endpoint
+
+```
+POST /captains/login
+```
+
+### Description
+
+Authenticates a captain. Expects email and password in the request body and returns a success message with captain info and a JWT token.
+
+### Request Body
+
+```json
+{
+  "email": "string, required, valid email",
+  "password": "string, required, min 6 chars"
+}
+```
+
+#### Example
+
+```json
+{
+  "email": "alice.smith@example.com",
+  "password": "strongPassword123"
+}
+```
+
+### Validation Rules
+
+- `email`: Required, must be a valid email address.
+- `password`: Required, minimum 6 characters.
+
+### Responses
+
+| Status Code | Description                                 |
+|-------------|---------------------------------------------|
+| 200         | Login successful. Returns captain info and JWT token. |
+| 400         | Validation

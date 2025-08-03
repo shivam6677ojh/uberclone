@@ -17,15 +17,22 @@ module.exports.registerUser = async (req, res, next) => {
 
     const { fullname, email, password } = req.body;
 
-    
+    const isUserExists = await UserModel.findOne({ email });
+    if (isUserExists) {
+        return res.status(400).json({ message: 'User with this email already exists' });
+    }
+
+    const hashedPassword = await UserModel.hashPassword(password);
+
     try {
-        // const hashedPassword = await UserModel.hashPassword(password); // no need of hasing here, handled in service
+
         const user = await userService.createUser({
             firstname: fullname.firstname,
             lastname: fullname.lastname,
             email,
-            password
+            password: hashedPassword
         });
+
         const token = user.generateAuthToken();
 
         res
@@ -56,7 +63,7 @@ module.exports.loginUser = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
-        
+
         console.log('Provided password:', password);
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
@@ -84,12 +91,12 @@ module.exports.loginUser = async (req, res, next) => {
 
 module.exports.getUserProfile = async (req, res, next) => {
     res.status(200).json({
-        message: 'User profile retrieved successfully', 
+        message: 'User profile retrieved successfully',
         user: {
             id: req.user._id,
             fullname: req.user.fullname,
             email: req.user.email
-        }  
+        }
     });
 }
 

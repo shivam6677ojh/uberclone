@@ -1,4 +1,4 @@
-const { hash } = require('bcrypt');
+
 const UserModel = require('../models/user.model.js');
 
 module.exports.createUser = async ({
@@ -11,15 +11,14 @@ module.exports.createUser = async ({
         throw new Error('All fields are required');
     }
 
-    const hashedpassword = await UserModel.hashPassword(password);
-
+    
     const user = await UserModel.create({
         fullname: {
             firstname,
             lastname
         },
         email,
-        password: hashedpassword
+        password,
     })
 
     return user;
