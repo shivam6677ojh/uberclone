@@ -5,11 +5,12 @@ const express = require('express');
 const app = express();
 const connectTodb = require('./db/db.js');
 const userRoutes = require('./routes/user.routes.js');
+const cookieparser = require('cookie-parser');
 
 connectTodb();
 
 app.use(cors());
-
+app.use(cookieparser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
