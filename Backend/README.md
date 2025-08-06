@@ -297,3 +297,85 @@ Authenticates a captain. Expects email and password in the request body and retu
 |-------------|---------------------------------------------|
 | 200         | Login successful. Returns captain info and JWT token. |
 | 400         | Validation
+
+
+## Get Captain Profile
+
+### Endpoint
+
+```
+GET /captains/profile
+```
+
+### Description
+
+Retrieves the authenticated captain's profile information. Requires a valid JWT token in the request (via cookie or Authorization header).
+
+### Authentication
+
+- Requires JWT token (sent as a cookie named `token` or in the `Authorization: Bearer <token>` header).
+
+### Responses
+
+| Status Code | Description                                 |
+|-------------|---------------------------------------------|
+| 200         | Captain profile retrieved successfully. Returns captain info. |
+| 401         | Unauthorized. No token provided or token invalid.       |
+| 500         | Internal server error.                      |
+
+### Example Response
+
+```json
+{
+  "message": "Captain profile retrieved successfully",
+  "captain": {
+    "id": "captain_id",
+    "fullname": {
+      "firstname": "Alice",
+      "lastname": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vehicle": {
+      "vehiclecolor": "Red",
+      "vehicleplate": "ABC123",
+      "vehiclecapacity": 4,
+      "vehicletype": "car"
+    },
+    "status": "active"
+  }
+}
+```
+
+---
+
+## Logout Captain
+
+### Endpoint
+
+```
+GET /captains/logout
+```
+
+### Description
+
+Logs out the authenticated captain by blacklisting the JWT token and clearing the authentication cookie.
+
+### Authentication
+
+- Requires JWT token (sent as a cookie named `token` or in the `Authorization: Bearer <token>` header).
+
+### Responses
+
+| Status Code | Description                                 |
+|-------------|---------------------------------------------|
+| 200         | Captain logged out successfully.            |
+| 401         | Unauthorized. No token provided.            |
+| 500         | Internal server error.                      |
+
+### Example Response
+
+```json
+{
+  "message": "Captain logged out successfully"
+}
+```

@@ -1,3 +1,5 @@
+const blacklisttokenModel = require('../models/blacklisttoken.model.js')
+
 const captainModel = require('../models/captain.model.js');
 
 const captainservice = require('../services/captain.service.js');
@@ -47,6 +49,7 @@ module.exports.loginCaptain = async (req, res, next) => {
     }
 
     const { email, password } = req.body;
+    console.log('Logging in captain:', { email, password });
 
     try {
         const captain = await captainModel.findOne({ email }).select('+password');
@@ -71,5 +74,29 @@ module.exports.loginCaptain = async (req, res, next) => {
     } catch (error) {
         console.error('Error logging in captain:', error);
         res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+module.exports.getCaptainProfile = async (req, res, next) => {
+    res.status(200).json({
+        captain: req.captain,
+        message: 'Captain profile retrieved successfully'
+    })
+};
+
+
+module.exports.logoutCaptain = async (req, res, next) => {
+    try {
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided, authorization denied' });
+        }
+        // Add the token to the blacklist
+        await blacklisttokenModel.create({token});
+        res.clearCookie('token');
+        return res.status(200).json({ message: 'Captain logged out successfully' });
+    } catch (error) {
+        console.error('Error logging out captain:', error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
 }

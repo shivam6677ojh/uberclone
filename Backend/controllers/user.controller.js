@@ -13,6 +13,7 @@ module.exports.registerUser = async (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
+    
     console.log('Registering user:', req.body);
 
     const { fullname, email, password } = req.body;
@@ -89,7 +90,7 @@ module.exports.loginUser = async (req, res, next) => {
     }
 }
 
-module.exports.getUserProfile = async (req, res, next) => {
+module.exports.getUserProfile = async (req, res) => {
     res.status(200).json({
         message: 'User profile retrieved successfully',
         user: {
