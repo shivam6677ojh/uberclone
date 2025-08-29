@@ -18,6 +18,7 @@ const captainSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        lowercase: true,
         match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'],
         minlength: [5, 'Email must be at least 5 characters long']
     },
@@ -49,7 +50,6 @@ const captainSchema = new mongoose.Schema({
             enum: ['car', 'bike', 'auto'],
             required: true
         }
-
     },
     location: {
         latitude:{

@@ -1,7 +1,12 @@
 import React, { useState } from "react";
+import { useContext } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { CaptainDataContext } from "../context/CaptainContext.jsx";
+import CaptainHome from "./CaptainHome.jsx";
 
 export default function CaptainSignup() {
   const [formData, setFormData] = useState({
@@ -16,9 +21,11 @@ export default function CaptainSignup() {
     vehicletype: "",
   });
   const [message, setMessage] = useState("");
-  const [captainData, setcaptainData] = useState('')
+  const { captain, setCaptain } = useContext(CaptainDataContext);
+  const navigate = useNavigate();
+  // const [captainData, setcaptainData] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation before submission
@@ -51,21 +58,47 @@ export default function CaptainSignup() {
       return;
     }
 
-    setcaptainData({
-      fullname:{
-        firstname:formData.firstname,
-        lastname:formData.lastname
+    // setcaptainData({
+    //   fullname:{
+    //     firstname:formData.firstname,
+    //     lastname:formData.lastname
+    //   },
+    //   email:formData.email,
+    //   password:formData.password,
+    //   vehicleinformation:{
+    //     vehiclecolor:formData.vehiclecolor,
+    //     vehicletype:formData.vehicletype,
+    //     vehicleplate:formData.vehicleplate,
+    //     vehiclecapacity:formData.vehiclecapacity
+    //   }
+    // })
+    // console.log(captainData);
+
+    const newCaptain = {
+      fullname: {
+        firstname: formData.firstname,
+        lastname: formData.lastname
       },
-      email:formData.email,
-      password:formData.password,
-      vehicleinformation:{
-        vehiclecolor:formData.vehiclecolor,
-        vehicletype:formData.vehicletype,
-        vehicleplate:formData.vehicleplate,
-        vehiclecapacity:formData.vehiclecapacity
+      email: formData.email,
+      password: formData.password,
+      vehicle: {
+        vehiclecolor: formData.vehiclecolor,
+        vehicletype: formData.vehicletype,
+        vehicleplate: formData.vehicleplate,
+        vehiclecapacity: formData.vehiclecapacity
       }
-    })
-    console.log(captainData);
+    }
+    console.log(newCaptain);
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/captains/register`, newCaptain);
+
+    if (response.status === 201) {
+      const data = response.data;
+      setCaptain(data.captain);
+      localStorage.setItem('token', data.token);
+      navigate('/captain-home');
+    }
+
 
     // Your API logic here
     // For now, just show dummy success
@@ -212,7 +245,7 @@ export default function CaptainSignup() {
             type="submit"
             className="w-full bg-black text-white text-lg py-3 rounded-md hover:bg-gray-900 transition cursor-pointer"
           >
-            Sign Up
+            Create Captain Account
           </button>
 
           <div className="text-center text-gray-600 my-2">

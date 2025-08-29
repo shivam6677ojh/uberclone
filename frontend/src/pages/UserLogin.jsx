@@ -3,21 +3,46 @@ import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import {Link} from "react-router-dom"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { UserDataContext } from "../context/UserContext.jsx";
+import UserContext from "../context/UserContext.jsx";
+import { useContext } from "react";
 
 export default function UserLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState({});
+  // const [userData, setUserData] = useState({});
 
-  const submitHandler = (e) => {
+  const [user, setUser] = useContext(UserDataContext);
+  const navigate = useNavigate();
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    setUserData({
+    // setUserData({
+    //   email: email,
+    //   password: password,
+    // });
+    const newuser = {
       email: email,
       password: password,
-    });
-    console.log(userData);
+    }
+    // console.log(userData);
     setEmail("");
     setPassword("");
+
+    const response =  axios.post(`${import.meta.env.VITE_BASE_URL}/api/users/login`, newuser);
+    response.then((res) => {  
+      if (res.status === 200) {
+        const data = res.data;
+        setUser(data.user);
+        localStorage.setItem('token', data.token);
+        navigate('/Home');
+      }
+    }).catch((error) => {
+      console.error("Login failed:", error);
+      // Handle error (e.g., show a message to the user)
+    });
   };
 
   return (

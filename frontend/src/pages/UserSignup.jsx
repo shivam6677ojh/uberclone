@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
-
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import axios from "axios"
+import { UserDataContext } from "../context/UserContext.jsx";
+import UserContext from "../context/UserContext.jsx";
+import { useContext } from "react";
 
 export default function UserSignup() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -12,25 +17,46 @@ export default function UserSignup() {
     password: "",
     confirmPassword: "",
   });
-  const [userData, setuserData] = useState('');
+  // const [userData, setuserData] = useState('');
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  // const [user, setUser] = React.useContext(UserContext);
+  const [user, setUser] = useContext(UserDataContext);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       setMessage("Passwords do not match.");
       return;
     }
-    setuserData({
-      fullName:{
-        firstname:formData.firstname,
-        lastname:formData.lastname
+    // setuserData({
+    //   fullName:{
+    //     firstname:formData.firstname,
+    //     lastname:formData.lastname
+    //   },
+    //   email:formData.email,
+    //   password:formData.password
+    // })
+    const newUser = {
+      fullname: {
+        firstname: formData.firstname,
+        lastname: formData.lastname
       },
-      email:formData.email,
-      password:formData.password
-    })
-    console.log(userData);
-    
+      email: formData.email,
+      password: formData.password
+    }
+    // console.log(userData);
+    // console.log(newUser);
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/users/register`, newUser);
+    if (response.status === 201) {
+      const data = response.data;
+      setUser(data.user);
+      localStorage.setItem('token', data.token);
+      navigate('/Home');
+    }
+    // console.log(response.data);s
+
     // Place signup logic here (e.g., send formData to API)
     setMessage("Registered successfully! (dummy)");
     setFormData({
@@ -40,13 +66,7 @@ export default function UserSignup() {
       password: "",
       confirmPassword: "",
     });
-    console.log(formData);
-
-    
-
-    
-
-    
+    // console.log(formData);
   };
 
   const handleChange = (e) => {

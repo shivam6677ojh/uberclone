@@ -1,21 +1,36 @@
 // UserLogin.jsx
 import React, { useState } from "react";
+import { useContext } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import {Link} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { CaptainDataContext } from "../context/CaptainContext.jsx";
 
 export default function CaptainLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [captainData, setCaptainData] = useState({});
+  // const [captainData, setCaptainData] = useState({}); // To store fetched captain data 
+  const {captain, setCaptain} = useContext(CaptainDataContext);
+  const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    setCaptainData({
-      email: email,
-      password: password,
-    });
-    console.log(captainData);
+    const captain = {
+      email : email,
+      password
+    }
+
+    const response = await  axios.post(`${import.meta.env.VITE_BASE_URL}/api/captains/login`, captain);
+
+    if(response.status === 200){
+      const data = response.data;
+      setCaptain(data.captain); // Store fetched captain data in state
+      localStorage.setItem('token', data.token); // Store token in localStorage
+      navigate('/captain-home'); // Navigate to captain home page
+    }
+    
     setEmail("");
     setPassword("");
   };
