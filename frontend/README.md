@@ -1,12 +1,124 @@
-# React + Vite
+# UberClone Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for the UberClone project, built with React and Vite. It provides user and captain authentication, registration, protected pages, and context-based state management.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **User Flow:** Register, login, logout, and access protected user pages.
+- **Captain Flow:** Register, login, logout, and access protected captain pages.
+- **Context API:** Authentication state managed via React Context for both users and captains.
+- **Protected Routes:** Only authenticated users/captains can access their respective home and logout pages.
+- **Responsive UI:** Modern design with social login buttons (Google, Apple, Facebook).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Project Structure
+
+```
+frontend/
+├── .env
+├── index.html
+├── package.json
+├── vite.config.js
+├── public/
+│   └── vite.svg
+├── src/
+│   ├── App.jsx
+│   ├── App.css
+│   ├── index.css
+│   ├── main.jsx
+│   ├── assets/
+│   │   └── react.svg
+│   ├── context/
+│   │   ├── CaptainContext.jsx
+│   │   └── UserContext.jsx
+│   └── pages/
+│       ├── CaptainHome.jsx
+│       ├── CaptainLogin.jsx
+│       ├── CaptainLogout.jsx
+│       ├── CaptainProtectedWrapper.jsx
+│       ├── CaptainSignup.jsx
+│       ├── Home.jsx
+│       ├── Start.jsx
+│       ├── UserLogin.jsx
+│       ├── UserLogout.jsx
+│       ├── UserProtectedWrapper.jsx
+│       └── UserSignup.jsx
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18+ recommended)
+- npm or yarn
+
+### Installation
+
+1. Go to the frontend folder:
+   ```
+   cd frontend
+   ```
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Create a `.env` file and set your backend API URLs:
+   ```
+   VITE_BASE_URL=http://localhost:5000
+   VITE_BACKEND_URL=http://localhost:5000
+   ```
+
+### Running the App
+
+Start the development server:
+```
+npm run dev
+```
+The app will be available at [http://localhost:5173](http://localhost:5173).
+
+---
+
+## Main Pages & Routes
+
+| Route                | Description                          |
+|----------------------|--------------------------------------|
+| `/`                  | Start page (choose user/captain)     |
+| `/login`             | User login                           |
+| `/signup`            | User registration                    |
+| `/Home`              | User protected home                  |
+| `/users/logout`      | User logout (protected)              |
+| `/captain-login`     | Captain login                        |
+| `/captain-signup`    | Captain registration                 |
+| `/captain-home`      | Captain protected home               |
+| `/captains/logout`   | Captain logout (protected)           |
+
+---
+
+## Authentication Flow
+
+- **Login/Signup:** On success, JWT token is stored in `localStorage`.
+- **Protected Pages:** Wrapped with `UserProtectedWrapper` or `CaptainProtectedWrapper` to check authentication and fetch profile.
+- **Logout:** Removes token and redirects to login.
+
+---
+
+## Context Usage
+
+- `UserContext.jsx` and `CaptainContext.jsx` provide global state for user/captain data and authentication status.
+
+---
+
+## Customization
+
+- Update API endpoints in `.env` as needed.
+- Modify styles in `App.css` and `index.css`.
+- Add more pages/components as required.
+
+---
+
+##
