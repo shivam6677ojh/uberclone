@@ -1,1 +1,7 @@
 @import "tailwindcss";
+
+/* In your main CSS file, e.g., src/index.css */
+.panel {
+    @apply fixed z-30 bottom-0 left-0 right-0 bg-white w-full px-4 py-6 shadow-2xl rounded-t-3xl;
+    transform: translateY(100%);
+}

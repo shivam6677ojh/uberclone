@@ -1,5 +1,3 @@
-
-
 import React, { useState, useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -7,6 +5,8 @@ import 'remixicon/fonts/remixicon.css'
 import LocationSearchPanel from '../components/LocationSearchPanel.jsx'
 import VehiclePanel from '../components/VehiclePanel.jsx'
 import ConfirmRide from '../components/ConfirmRide.jsx'
+import LookingForDriver from '../components/LookingForDriver.jsx'
+import WaitingForDriver from '../components/WaitingForDriver.jsx'
 
 const Home = () => {
     const [pickup, setpickup] = useState('')
@@ -15,9 +15,13 @@ const Home = () => {
     const vehiclePanelRef = useRef(null)
     const panelRef = useRef(null)
     const panelcloseRef = useRef(null)
-    const [vehiclePanel, setVehiclePanel] = useState(false);
+    const confirmRidePanelRef = useRef(null)
+    const VehicleFoundRef = useRef(null)
+    const WaitingRiderRef = useRef(null)
+    const [vehiclePanel, setVehiclePanel] = useState(false)
     const [confirmRidePanel, setconfirmRidePanel] = useState(false)
-    const confirmRidePanelRef = useRef(null);
+    const [VehicleFoundPanel, setVehicleFoundPanel] = useState(false)
+    const [WaitingRiderPanel, setWaitingRiderPanel] = useState(false)
 
 
     const submitHandler = (e) => {
@@ -67,6 +71,30 @@ const Home = () => {
             })
         }
     },[confirmRidePanel])
+
+    useGSAP(function(){
+        if(VehicleFoundPanel){
+            gsap.to(VehicleFoundRef.current, {
+                transform: 'translateY(0)'
+            })  
+        }else{
+            gsap.to(VehicleFoundRef.current, {
+                transform: 'translateY(100%)'
+            })
+        }
+    },[VehicleFoundPanel])
+
+    useGSAP(function(){
+        if(WaitingRiderPanel){
+            gsap.to(WaitingRiderRef.current, {
+                transform: 'translateY(0)'
+            })  
+        }else{
+            gsap.to(WaitingRiderRef.current, {
+                transform: 'translateY(100%)'
+            })
+        }
+    },[WaitingRiderPanel])
 
     return (
         <>
@@ -148,10 +176,18 @@ const Home = () => {
                 <div ref={vehiclePanelRef} className='fixed z-10 bottom-0 translate-y-full bg-white w-full px-4 py-6 shadow-2xl rounded-t-3xl'>
                     <VehiclePanel setconfirmRidePanel={setconfirmRidePanel} setVehiclePanel={setVehiclePanel} />
                 </div>
+
                 <div ref={confirmRidePanelRef} className='fixed z-10 bottom-0 translate-y-full bg-white w-full px-4 py-6 shadow-2xl rounded-t-3xl'>
-                    <ConfirmRide confirmRidePanel={confirmRidePanel} />
+                    <ConfirmRide  setconfirmRidePanel={setconfirmRidePanel}  setVehicleFoundPanel={setVehicleFoundPanel} />
                 </div>
 
+                <div ref={VehicleFoundRef}  className='fixed z-10 bottom-0 translate-y-full bg-white w-full px-4 py-6 shadow-2xl rounded-t-3xl'>
+                    <LookingForDriver setVehicleFoundPanel={setVehicleFoundPanel} />
+                </div>
+
+                <div ref={WaitingRiderRef}  className='fixed z-10 bottom-0 translate-y-full  bg-white w-full px-4 py-6 shadow-2xl rounded-t-3xl'>
+                    <WaitingForDriver setWaitingRiderPanel={setWaitingRiderPanel} />
+                </div>
 
             </div>
         </>
@@ -159,3 +195,4 @@ const Home = () => {
 }
 
 export default Home
+

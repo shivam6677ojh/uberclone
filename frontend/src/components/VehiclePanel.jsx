@@ -64,7 +64,7 @@ const VehiclePanel = (props) => {
                         <h3 className='text-lg font-bold text-gray-900 flex items-center'>
                             UberAuto
                             <span className='ml-2 text-gray-500 text-sm'>
-                                <i className="ri-user-fill"></i> 1
+                                <i className="ri-user-fill"></i> 3
                             </span>
                         </h3>
                         <h5 className='text-sm text-green-500 font-medium mt-1'>
